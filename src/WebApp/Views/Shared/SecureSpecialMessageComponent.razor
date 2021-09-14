@@ -1,0 +1,41 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.SignalR.Client
+@using WebApp.Models
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<h2>@myMessage.Id</h2>
+<div>@myMessage.Message</div>
+
+@code {
+    private HubConnection hubConnection;
+    private SpecialMessage myMessage = new SpecialMessage();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!IsConnected)
+        {
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/mysecurespecialhub"))
+                .WithAutomaticReconnect()
+                .Build();
+
+            hubConnection.On<string, SpecialMessage>
+                ("ReceiveMessage", (user, message) =>
+                {
+                    myMessage = message;
+                    StateHasChanged();
+                });
+
+            await hubConnection.StartAsync().ConfigureAwait(false);
+        }
+    }
+
+    public bool IsConnected => hubConnection != null
+        && hubConnection.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        await hubConnection?.DisposeAsync();
+    }
+}

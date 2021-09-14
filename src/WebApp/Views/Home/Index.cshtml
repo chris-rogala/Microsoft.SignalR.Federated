@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style type="text/css">
+    .card {
+        background-color: #f8f8f8;
+    }
+
+    .icon {
+        max-height:240px;
+        padding:5px;
+    }
+
+    .link-unstyled {
+        color: #262626;
+        text-decoration: inherit;
+    }
+
+    .link-unstyled:hover, .link-unstyled:focus {
+        color: #f8f8f8;
+        cursor: pointer;
+        text-decoration: inherit;
+    }
+
+    .card:hover, .card:focus {
+        background-color: #535353;
+    }
+</style>
+
+<div class="row">
+    <div class="col">
+        <a class="link-unstyled" href="~/SpecialMessageHub">
+            <div class="card" style="width: 18rem;">
+                <img class="icon" src="~/imgs/unlock.svg" />
+                <div class="card-body">
+                    <h5 class="card-title">Unsecured</h5>
+                    <p class="card-text">This view contains the component referencing the Hub <b>without</b> the <b>[Authorize]</b> attribute.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col">
+        <a class="card-link link-unstyled" href="~/SecureSpecialMessageHub">
+            <div class="card" style="width: 18rem;">
+                <img class="icon" style="max-height:240px" src="~/imgs/lock.svg" />
+                <div class="card-body">
+                    <h5 class="card-title">Secured</h5>
+                    <p class="card-text">This view contains the component referencing the Hub <b>with</b> the <b>[Authorize]</b> attribute.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
