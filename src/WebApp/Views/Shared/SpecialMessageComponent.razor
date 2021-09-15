@@ -3,7 +3,7 @@
 @using WebApp.Models
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthenticationStateProvider
-@attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
 @implements IAsyncDisposable
 
@@ -20,6 +20,7 @@
         {
             var state = await AuthenticationStateProvider.GetAuthenticationStateAsync()
                 .ConfigureAwait(false);
+
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myspecialhub"))
                 .WithAutomaticReconnect()
