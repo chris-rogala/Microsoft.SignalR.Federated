@@ -6,6 +6,7 @@ using WebApp.Models;
 
 namespace WebApp.Hubs
 {
+    [AllowAnonymous]
     public class SpecialMessageHub : Hub
     {
         public override Task OnConnectedAsync()

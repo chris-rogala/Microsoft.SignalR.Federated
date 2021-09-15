@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 using WebApp.Hubs;
 
 namespace WebApp
@@ -32,15 +34,18 @@ namespace WebApp
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseResponseCompression();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapBlazorHub();
+
+                endpoints.MapHub<SpecialMessageHub>("/myspecialhub");
+                endpoints.MapHub<SecureSpecialMessageHub>("/mysecurespecialhub");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-
-                endpoints.MapHub<SpecialMessageHub>("/myspecialhub");
-                endpoints.MapHub<SecureSpecialMessageHub>("/mysecurespecialhub");
             });
         }
 
@@ -59,7 +64,14 @@ namespace WebApp
             });
             services.AddRazorPages();
 
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
             services.AddSignalR();
+            services.AddServerSideBlazor();
+
         }
     }
 }

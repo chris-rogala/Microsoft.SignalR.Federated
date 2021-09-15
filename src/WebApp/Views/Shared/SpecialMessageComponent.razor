@@ -2,6 +2,9 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using WebApp.Models
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+
 @implements IAsyncDisposable
 
 <h2>@myMessage.Id</h2>
@@ -15,6 +18,8 @@
     {
         if (!IsConnected)
         {
+            var state = await AuthenticationStateProvider.GetAuthenticationStateAsync()
+                .ConfigureAwait(false);
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myspecialhub"))
                 .WithAutomaticReconnect()
