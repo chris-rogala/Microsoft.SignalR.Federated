@@ -1,0 +1,84 @@
+﻿
+<ul class="list-unstyled" id="messages">
+    <li>Waiting on messages...</li>
+</ul>
+<div id="connectionStatus">Connecting...</div>
+
+<script type="text/javascript">
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/mysecurespecialhub")
+        .configureLogging(signalR.LogLevel.Information)
+        .withAutomaticReconnect({
+            nextRetryDelayInMilliseconds: retryContext => {
+                if (retryContext.elapsedMilliseconds < 60000) {
+                    // If we've been reconnecting for less than 60 seconds so far,
+                    // wait between 0 and 10 seconds before the next reconnect attempt.
+                    return Math.random() * 10000;
+                } else {
+                    // If we've been reconnecting for more than 60 seconds so far, stop reconnecting.
+                    return null;
+                }
+            }
+        })
+        .build();
+
+    async function start() {
+        try {
+            await connection.start();
+
+            const div = document.getElementById("connectionStatus");
+            div.innerHTML = 'Connected..';
+            console.log("SignalR Connected.");
+        } catch (err) {
+            console.log(err);
+            const div = document.getElementById("connectionStatus");
+            div.innerHTML = 'Error connecting "${error}"';
+            setTimeout(start, 5000);
+        }
+    };
+
+    connection.onclose(async () => {
+        await start();
+    });
+
+    connection.on("ReceiveMessage", (message) => {
+        const li = document.createElement("li");
+        li.textContent = `${message.id}: ${message.text}`;
+        document.getElementById("messages").appendChild(li);
+    });
+
+    connection.onreconnecting(error => {
+        console.assert(connection.state === signalR.HubConnectionState.Reconnecting);
+
+        const div = document.getElementById("connectionStatus");
+        div.innerHTML = 'Connection lost due to error "${error}". Reconnecting.';
+    });
+
+    connection.onreconnected(connectionId => {
+        console.assert(connection.state === signalR.HubConnectionState.Connected);
+
+        const div = document.getElementById("connectionStatus");
+        div.innerHTML = 'Connection reestablished. Connected with connectionId "${connectionId}".';
+    });
+
+    connection.onclose(error => {
+        console.assert(connection.state === signalR.HubConnectionState.Disconnected);
+
+        const div = document.getElementById("connectionStatus");
+        div.innerHTML = 'Connection closed due to error "${error}". Try refreshing this page to restart the connection.';
+    });
+
+    // Start the connection.
+    start();
+
+    var lockResolver;
+    if (navigator && navigator.locks && navigator.locks.request) {
+        const promise = new Promise((res) => {
+            lockResolver = res;
+        });
+
+        navigator.locks.request('unique_lock_name', { mode: "shared" }, () => {
+            return promise;
+        });
+    }
+</script>

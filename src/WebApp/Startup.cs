@@ -38,8 +38,6 @@ namespace WebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
-
-                endpoints.MapHub<SpecialMessageHub>("/myspecialhub");
                 endpoints.MapHub<SecureSpecialMessageHub>("/mysecurespecialhub");
 
                 endpoints.MapControllerRoute(
@@ -69,9 +67,9 @@ namespace WebApp
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
+            services.AddSingleton<SecureSpecialMessageHub>();
             services.AddSignalR();
             services.AddServerSideBlazor();
-
         }
     }
 }

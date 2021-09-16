@@ -29,23 +29,24 @@
 
 <div class="row">
     <div class="col">
-        <a class="link-unstyled" href="~/SpecialMessageHub">
+        <a class="card-link link-unstyled" href="~/SecureSpecialMessageHubBlazor">
             <div class="card" style="width: 18rem;">
-                <img class="icon" src="~/imgs/unlock.svg" />
+                <img class="icon" style="max-height:240px" src="~/imgs/lock.svg" />
                 <div class="card-body">
-                    <h5 class="card-title">Unsecured</h5>
-                    <p class="card-text">This view contains the component referencing the Hub <b>without</b> the <b>[Authorize]</b> attribute.</p>
+                    <h5 class="card-title">Secured - Blazor (Server-side)</h5>
+                    <p class="card-text">This view contains the component referencing the Hub <b>with</b> the <b>[Authorize]</b> attribute.</p>
                 </div>
             </div>
         </a>
     </div>
+
     <div class="col">
-        <a class="card-link link-unstyled" href="~/SecureSpecialMessageHub">
+        <a class="card-link link-unstyled" href="~/SecureSpecialMessageHubJavaScript">
             <div class="card" style="width: 18rem;">
                 <img class="icon" style="max-height:240px" src="~/imgs/lock.svg" />
                 <div class="card-body">
-                    <h5 class="card-title">Secured</h5>
-                    <p class="card-text">This view contains the component referencing the Hub <b>with</b> the <b>[Authorize]</b> attribute.</p>
+                    <h5 class="card-title">Secured - JavaScript</h5>
+                    <p class="card-text">This view contains the component referencing the Hub <b>with</b> the <b>[Authorize]</b> attribute using JavaScript to make the connection.</p>
                 </div>
             </div>
         </a>

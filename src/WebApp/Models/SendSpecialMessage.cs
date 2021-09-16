@@ -1,8 +1,7 @@
 ﻿namespace WebApp.Models
 {
-    public class SpecialMessage
+    public class SendSpecialMessage
     {
-        public int Id { get; set; }
         public string Text { get; set; }
     }
 }
